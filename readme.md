@@ -24,13 +24,23 @@ List<String> classes = classResources.stream().map(classResource -> classResourc
 List<BlackInfo> blackInfo = BreakerUtils.getDatabase(1261);
 List<String> allBanned = blackInfo.stream().flatMap(k -> k.known.stream()).map(k -> k.banned).collect(
     Collectors.toList());
+List<BlackInfo> blackInfo2 = BreakerUtils.getLeDatabase(1261);
+List<String> allBanned2 = blackInfo2.stream().flatMap(k -> k.known.stream()).map(k -> k.banned).collect(
+    Collectors.toList());
 for (String banned : allBanned) {
     for (String c : classes) {
         if (c.startsWith(banned)) {
-            System.out.println(c);
+            boolean ban = false;
+            for (String banned2 : allBanned2) {
+                if (ban = c.startsWith(banned2))
+                    break;
+            }
+            if (!ban)
+                System.out.println(c);
         }
     }
 }
+
 
 ```
 会把符合条件的class都输出，因此，还需要你判断所对应的依赖包是哪个。
