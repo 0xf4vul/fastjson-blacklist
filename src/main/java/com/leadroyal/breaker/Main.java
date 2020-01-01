@@ -31,9 +31,16 @@ public class Main {
         List<BlackInfo> blackInfo = BreakerUtils.getDatabase(1261);
         List<String> allBanned = blackInfo.stream().flatMap(k -> k.known.stream()).map(k -> k.banned).collect(
             Collectors.toList());
+        List<BlackInfo> blackInfo2 = BreakerUtils.getLeDatabase(1261);
+        List<String> allBanned2 = blackInfo2.stream().flatMap(k -> k.known.stream()).map(k -> k.banned).collect(
+            Collectors.toList());
         for (String banned : allBanned) {
             for (String c : classes) {
                 if (c.startsWith(banned)) {
+                    for (String banned2 : allBanned2) {
+                        if (c.startsWith(banned2))
+                            break;
+                    }
                     System.out.println(c);
                 }
             }

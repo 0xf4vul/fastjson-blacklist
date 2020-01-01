@@ -71,6 +71,14 @@ public class BreakerUtils {
         return blackInfos;
     }
 
+    public static List<BlackInfo> getLeDatabase(int version) {
+        List<BlackInfo> blackInfos = new ArrayList<>();
+        for (BlackInfo info : V1_2_all.blackInfoList)
+            if (info.version <= version)
+                blackInfos.add(info);
+        return blackInfos;
+    }
+
     // 使用给定列表完善数据库
     public static BlackInfo completeDatabase(String[] keywords) {
         BlackInfo ret = new BlackInfo();
