@@ -1,5 +1,41 @@
 # fastjson blacklist
 
+### PS:
+打CTF实在厌倦了找利用链，就知道一个fastjson的版本，一堆依赖找啊找，头都疼。为了解决这个烦恼，用了卓卓师傅的fastjson黑名单工具和库，自己改造了一下。
+
+只要把依赖和版本输入，就能根据黑名单找到还没被禁用的class：
+```
+ClassLoader classLoader;
+if (false) {
+    //加载war文件
+    Path path = Paths.get("");
+    //实现为URLClassLoader，加载war包下的WEB-INF/lib和WEB-INF/classes
+    classLoader = Util.getWarClassLoader(path);
+} else {
+    //加载jar文件，可配置多个
+    final Path[] jarPaths = new Path[]{Paths.get("/Users/xuanyh/IdeaProjects/ctf/target/ctf-1.0-SNAPSHOT-jar-with-dependencies.jar")};
+    //实现为URLClassLoader，加载所有指定的jar
+    classLoader = Util.getJarClassLoader(jarPaths);
+}
+ClassResourceEnumerator classResourceEnumerator = new ClassResourceEnumerator(classLoader);
+Collection<ClassResource> classResources = classResourceEnumerator.getAllClasses();
+List<String> classes = classResources.stream().map(classResource -> classResource.getName().replace("/",".")).collect(
+    Collectors.toList());
+List<BlackInfo> blackInfo = BreakerUtils.getDatabase(1261);
+List<String> allBanned = blackInfo.stream().flatMap(k -> k.known.stream()).map(k -> k.banned).collect(
+    Collectors.toList());
+for (String banned : allBanned) {
+    for (String c : classes) {
+        if (c.startsWith(banned)) {
+            System.out.println(c);
+        }
+    }
+}
+
+```
+会把符合条件的class都输出，因此，还需要你判断所对应的依赖包是哪个。
+
+
 ### 背景
 
 `fastjson` 在1.2.42开始，把原本明文的黑名单改成了哈希过的黑名单，防止安全研究者对其进行研究。在 [https://github.com/alibaba/fastjson/commit/eebea031d4d6f0a079c3d26845d96ad50c3aaccd](https://github.com/alibaba/fastjson/commit/eebea031d4d6f0a079c3d26845d96ad50c3aaccd) 这次commit中体现出来。
