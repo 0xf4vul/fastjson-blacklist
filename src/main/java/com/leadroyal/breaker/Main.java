@@ -37,11 +37,13 @@ public class Main {
         for (String banned : allBanned) {
             for (String c : classes) {
                 if (c.startsWith(banned)) {
+                    boolean ban = false;
                     for (String banned2 : allBanned2) {
-                        if (c.startsWith(banned2))
+                        if (ban = c.startsWith(banned2))
                             break;
                     }
-                    System.out.println(c);
+                    if (!ban)
+                        System.out.println(c);
                 }
             }
         }
